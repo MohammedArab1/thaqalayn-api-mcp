@@ -17,7 +17,7 @@ export default class HadithService {
         return await response.json();
     }
     // Hadith operations
-    async getRandomHadith(bookId = null) {
+    async getRandomHadith() {
         const response = await fetch(`${this.apiUrl}/random`, {
             method: "GET",
             headers: {
@@ -26,6 +26,18 @@ export default class HadithService {
         });
         if (!response.ok) {
             throw new Error(`Error fetching random data: ${response.statusText}`);
+        }
+        return await response.json();
+    }
+    async searchHadith(query) {
+        const response = await fetch(`${this.apiUrl}/query?q=${query}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`Error fetching query data: ${response.statusText}`);
         }
         return await response.json();
     }

@@ -1,4 +1,4 @@
-import { Book } from "../../types/types.js";
+import { Book, Hadith } from "../../types/types.js";
 
 export default class HadithService {
   apiUrl: string;
@@ -24,7 +24,7 @@ export default class HadithService {
   }
 
   // Hadith operations
-  async getRandomHadith(bookId = null): Promise<any> {
+  async getRandomHadith(): Promise<Hadith> {
     const response = await fetch(`${this.apiUrl}/random`, {
       method: "GET",
       headers: {
@@ -34,6 +34,21 @@ export default class HadithService {
 
     if (!response.ok) {
       throw new Error(`Error fetching random data: ${response.statusText}`);
+    }
+
+    return await response.json();
+  }
+
+  async searchHadith(query: string): Promise<Hadith[]> {
+    const response = await fetch(`${this.apiUrl}/query?q=${query}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching query data: ${response.statusText}`);
     }
 
     return await response.json();

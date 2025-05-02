@@ -19,3 +19,20 @@ export declare type ControllerResponse = {
 export declare type MCPReturn = {
   content?: [type?: string, text?: string];
 };
+
+export declare type Hadith = {
+  id: Number;
+  bookId: String;
+  book: String;
+  category: String;
+  categoryId: String;
+  chapter: String;
+  author: String;
+  translator: String;
+  englishText: String;
+  arabicText: String;
+  majlisiGrading: String;
+  BehdudiGrading: String;
+  MohseniGrading: String;
+  URL: String;
+};

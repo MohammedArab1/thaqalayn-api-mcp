@@ -24,14 +24,37 @@ export default class HadithController {
     }
   }
 
-  // randomHadithHandler = async (req, res) => {
-  // 	try {
-  // 		const randomHadith = await this.service.getRandomHadith();
-  // 		res.json(randomHadith);
-  // 	} catch (error) {
-  // 		this.handleError(res, error);
-  // 	}
-  // };
+  async randomHadithHandler(): Promise<ControllerResponse> {
+    try {
+      const hadith = await this.service.getRandomHadith();
+      return {
+        success: true,
+        data: JSON.stringify(hadith),
+      };
+    } catch (error) {
+      console.error("Failed to fetch hadith:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async hadithQueryHandler(query: string): Promise<ControllerResponse> {
+    try {
+      const hadiths = await this.service.searchHadith(query);
+      return {
+        success: true,
+        data: hadiths.map((hadith) => JSON.stringify(hadith)).join("\n"),
+      };
+    } catch (error) {
+      console.error("Failed to fetch hadiths:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
 
   // queryHandler = async (req, res) => {
   // 	try {

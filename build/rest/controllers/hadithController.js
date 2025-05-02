@@ -19,4 +19,36 @@ export default class HadithController {
             };
         }
     }
+    async randomHadithHandler() {
+        try {
+            const hadith = await this.service.getRandomHadith();
+            return {
+                success: true,
+                data: JSON.stringify(hadith),
+            };
+        }
+        catch (error) {
+            console.error("Failed to fetch hadith:", error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error",
+            };
+        }
+    }
+    async hadithQueryHandler(query) {
+        try {
+            const hadiths = await this.service.searchHadith(query);
+            return {
+                success: true,
+                data: hadiths.map((hadith) => JSON.stringify(hadith)).join("\n"),
+            };
+        }
+        catch (error) {
+            console.error("Failed to fetch hadiths:", error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error",
+            };
+        }
+    }
 }
