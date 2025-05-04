@@ -1,11 +1,12 @@
-import HadithService from "./rest/services/hadithService.js";
-import HadithController from "./rest/controllers/hadithController.js";
 import { z } from "zod";
+import HadithController from "./rest/controllers/hadithController.js";
+import HadithService from "./rest/services/hadithService.js";
 export const registerHandlers = (server) => {
     const API_BASE = "https://www.thaqalayn-api.net/api/v2";
     const hadithService = new HadithService(API_BASE);
     const hadithController = new HadithController(hadithService);
-    server.tool("get-all-books", "Get all book information", async () => {
+    server.tool("get-all-books", `Get all information about each book.
+    Use this endpoint first to find book IDs if requesting an endpoint that requires a book id.`, async () => {
         const allBooks = await hadithController.allBooksHandler();
         if (!allBooks.data) {
             // return returnContent("text", "Failed to retrieve book information");
@@ -94,6 +95,30 @@ export const registerHandlers = (server) => {
                 {
                     type: "text",
                     text: ingredients.data,
+                },
+            ],
+        };
+    });
+    server.tool("get-graphql-introspection", `
+    Fetches the graphql introspection, used to know how to make requests to the graphql api
+    to fetch only the necessary fields.
+    `, async () => {
+        const introspection = await hadithController.introspectionHandler();
+        if (!introspection.data) {
+            return {
+                content: [
+                    {
+                        type: "text",
+                        text: "Failed to retrieve introspection",
+                    },
+                ],
+            };
+        }
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: introspection.data,
                 },
             ],
         };

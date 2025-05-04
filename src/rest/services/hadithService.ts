@@ -1,4 +1,9 @@
-import { Book, Hadith, Ingredient } from "../../types/types.js";
+import {
+  Book,
+  Hadith,
+  Ingredient,
+  IntrospectionResponse,
+} from "../../types/types.js";
 
 export default class HadithService {
   apiUrl: string;
@@ -77,60 +82,36 @@ export default class HadithService {
     return await response.json();
   }
 
-  // async searchHadith(query, bookId = null) {
-  // 	const escapedQuery = this.escapeRegExp(query);
-  // 	const $regex = new RegExp(escapedQuery, 'i');
-  // 	const baseFilter = bookId ? { bookId } : {};
+  async graphQLIntrospection(): Promise<IntrospectionResponse> {
+    const minimalQuery = `
+        query MinimalIntrospection {
+          __schema {
+            types {
+              name
+              kind
+              fields {
+                name
+              }
+            }
+          }
+        }
+      `;
 
-  // 	const [englishResults, arabicResults] = await Promise.all([
-  // 		this.hadithModel.find(
-  // 			{
-  // 				...baseFilter,
-  // 				englishText: { $regex },
-  // 			},
-  // 			{ _id: 0, __v: 0 }
-  // 		),
+    const response = await fetch(`${this.apiUrl}/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: minimalQuery,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(
+        `Error fetching introspection data: ${response.statusText}`,
+      );
+    }
 
-  // 		this.hadithModel.find(
-  // 			{
-  // 				...baseFilter,
-  // 				arabicText: { $regex },
-  // 			},
-  // 			{ _id: 0, __v: 0 }
-  // 		),
-  // 	]);
-
-  // 	return this.processResults(englishResults, arabicResults);
-  // }
-
-  // async getHadithsByBook(bookId) {
-  // 	const hadiths = await this.hadithModel.find({ bookId }, { _id: 0, __v: 0 });
-  // 	return hadiths.sort((a, b) => a.id - b.id);
-  // }
-
-  // async getHadithById(bookId, hadithId) {
-  // 	return this.hadithModel.findOne(
-  // 		{ bookId, id: hadithId },
-  // 		{ _id: 0, __v: 0 }
-  // 	);
-  // }
-
-  // // Utility methods
-  // processResults(englishResults, arabicResults) {
-  // 	if (englishResults.length === 0 && arabicResults.length === 0) {
-  // 		return { error: 'No matches found' };
-  // 	}
-  // 	return englishResults.length > 0 ? englishResults : arabicResults;
-  // }
-
-  // escapeRegExp(string) {
-  // 	return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  // }
-
-  // compareAlphabetically(field) {
-  // 	return (a, b) =>
-  // 		a[field].localeCompare(b[field], undefined, {
-  // 			sensitivity: 'base',
-  // 		});
-  // }
+    return await response.json();
+  }
 }

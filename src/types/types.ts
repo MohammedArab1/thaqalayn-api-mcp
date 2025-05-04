@@ -44,3 +44,17 @@ export declare type Ingredient = {
   otherNames: [String];
   unknown: [String];
 };
+
+export declare type IntrospectionResponse = {
+  data: {
+    __schema: {
+      types: Array<{
+        name: string;
+        kind: string;
+        fields: Array<{
+          name: string;
+        }> | null;
+      }>;
+    };
+  };
+};

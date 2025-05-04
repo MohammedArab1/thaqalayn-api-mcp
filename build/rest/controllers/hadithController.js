@@ -19,9 +19,15 @@ export default class HadithController {
             };
         }
     }
-    async randomHadithHandler() {
+    async randomHadithHandler(bookId) {
         try {
-            const hadith = await this.service.getRandomHadith();
+            var hadith;
+            if (typeof bookId !== undefined) {
+                hadith = await this.service.getRandomHadith(bookId);
+            }
+            else {
+                hadith = await this.service.getRandomHadith();
+            }
             return {
                 success: true,
                 data: JSON.stringify(hadith),
@@ -35,9 +41,15 @@ export default class HadithController {
             };
         }
     }
-    async hadithQueryHandler(query) {
+    async hadithQueryHandler(query, bookId) {
         try {
-            const hadiths = await this.service.searchHadith(query);
+            var hadiths;
+            if (typeof bookId !== undefined) {
+                hadiths = await this.service.searchHadith(query, bookId);
+            }
+            else {
+                hadiths = await this.service.searchHadith(query);
+            }
             return {
                 success: true,
                 data: hadiths.map((hadith) => JSON.stringify(hadith)).join("\n"),
@@ -63,6 +75,22 @@ export default class HadithController {
         }
         catch (error) {
             console.error("Failed to fetch ingredients:", error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error",
+            };
+        }
+    }
+    async introspectionHandler() {
+        try {
+            const introSpection = await this.service.graphQLIntrospection();
+            return {
+                success: true,
+                data: JSON.stringify(introSpection),
+            };
+        }
+        catch (error) {
+            console.error("Failed to fetch introspection:", error);
             return {
                 success: false,
                 error: error instanceof Error ? error.message : "Unknown error",

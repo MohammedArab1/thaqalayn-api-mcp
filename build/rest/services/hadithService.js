@@ -17,8 +17,12 @@ export default class HadithService {
         return await response.json();
     }
     // Hadith operations
-    async getRandomHadith() {
-        const response = await fetch(`${this.apiUrl}/random`, {
+    async getRandomHadith(bookId) {
+        var url = `${this.apiUrl}/random`;
+        if (typeof bookId !== undefined) {
+            url = `${this.apiUrl}/${bookId}/random`;
+        }
+        const response = await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -29,8 +33,12 @@ export default class HadithService {
         }
         return await response.json();
     }
-    async searchHadith(query) {
-        const response = await fetch(`${this.apiUrl}/query?q=${query}`, {
+    async searchHadith(query, bookId) {
+        var url = `${this.apiUrl}/query?q=${query}`;
+        if (typeof bookId !== undefined) {
+            url = `${this.apiUrl}/query/${bookId}?q=${query}`;
+        }
+        const response = await fetch(url, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -50,6 +58,34 @@ export default class HadithService {
         });
         if (!response.ok) {
             throw new Error(`Error fetching query data: ${response.statusText}`);
+        }
+        return await response.json();
+    }
+    async graphQLIntrospection() {
+        const minimalQuery = `
+        query MinimalIntrospection {
+          __schema {
+            types {
+              name
+              kind
+              fields {
+                name
+              }
+            }
+          }
+        }
+      `;
+        const response = await fetch(`${this.apiUrl}/graphql`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                query: minimalQuery,
+            }),
+        });
+        if (!response.ok) {
+            throw new Error(`Error fetching introspection data: ${response.statusText}`);
         }
         return await response.json();
     }
