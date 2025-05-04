@@ -51,4 +51,22 @@ export default class HadithController {
             };
         }
     }
+    async ingredientsHandler() {
+        try {
+            const ingredients = await this.service.fetchIngredients();
+            return {
+                success: true,
+                data: ingredients
+                    .map((ingredient) => JSON.stringify(ingredient))
+                    .join("\n"),
+            };
+        }
+        catch (error) {
+            console.error("Failed to fetch ingredients:", error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error",
+            };
+        }
+    }
 }

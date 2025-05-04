@@ -1,5 +1,10 @@
 import HadithService from "../services/hadithService.js";
-import { Book, ControllerResponse } from "../../types/types.js";
+import {
+  Book,
+  ControllerResponse,
+  Ingredient,
+  Hadith,
+} from "../../types/types.js";
 
 export default class HadithController {
   service: HadithService;
@@ -40,15 +45,41 @@ export default class HadithController {
     }
   }
 
-  async hadithQueryHandler(query: string): Promise<ControllerResponse> {
+  async hadithQueryHandler(
+    query: string,
+    bookId?: string,
+  ): Promise<ControllerResponse> {
     try {
-      const hadiths = await this.service.searchHadith(query);
+      var hadiths: Hadith[];
+      if (typeof bookId !== undefined) {
+        hadiths = await this.service.searchHadith(query, bookId);
+      } else {
+        hadiths = await this.service.searchHadith(query);
+      }
       return {
         success: true,
         data: hadiths.map((hadith) => JSON.stringify(hadith)).join("\n"),
       };
     } catch (error) {
       console.error("Failed to fetch hadiths:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async ingredientsHandler(): Promise<ControllerResponse> {
+    try {
+      const ingredients = await this.service.fetchIngredients();
+      return {
+        success: true,
+        data: ingredients
+          .map((ingredient) => JSON.stringify(ingredient))
+          .join("\n"),
+      };
+    } catch (error) {
+      console.error("Failed to fetch ingredients:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",

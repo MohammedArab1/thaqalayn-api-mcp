@@ -1,4 +1,4 @@
-import { Book, Hadith } from "../../types/types.js";
+import { Book, Hadith, Ingredient } from "../../types/types.js";
 
 export default class HadithService {
   apiUrl: string;
@@ -39,14 +39,33 @@ export default class HadithService {
     return await response.json();
   }
 
-  async searchHadith(query: string): Promise<Hadith[]> {
-    const response = await fetch(`${this.apiUrl}/query?q=${query}`, {
+  async searchHadith(query: string, bookId?: string): Promise<Hadith[]> {
+    var url = `${this.apiUrl}/query?q=${query}`;
+    if (typeof bookId !== undefined) {
+      url = `${this.apiUrl}/bookId/query?q=${query}`;
+    }
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
+    if (!response.ok) {
+      throw new Error(`Error fetching query data: ${response.statusText}`);
+    }
+
+    return await response.json();
+  }
+
+  async fetchIngredients(): Promise<Ingredient[]> {
+    const response = await fetch(`${this.apiUrl}/ingredients`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     if (!response.ok) {
       throw new Error(`Error fetching query data: ${response.statusText}`);
     }

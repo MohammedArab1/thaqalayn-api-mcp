@@ -41,4 +41,16 @@ export default class HadithService {
         }
         return await response.json();
     }
+    async fetchIngredients() {
+        const response = await fetch(`${this.apiUrl}/ingredients`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        if (!response.ok) {
+            throw new Error(`Error fetching query data: ${response.statusText}`);
+        }
+        return await response.json();
+    }
 }

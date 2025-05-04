@@ -36,3 +36,11 @@ export declare type Hadith = {
   MohseniGrading: String;
   URL: String;
 };
+
+export declare type Ingredient = {
+  ingredient: String;
+  statuses: [String];
+  info: [String];
+  otherNames: [String];
+  unknown: [String];
+};
