@@ -24,8 +24,12 @@ export default class HadithService {
   }
 
   // Hadith operations
-  async getRandomHadith(): Promise<Hadith> {
-    const response = await fetch(`${this.apiUrl}/random`, {
+  async getRandomHadith(bookId?: string): Promise<Hadith> {
+    var url = `${this.apiUrl}/random`
+    if (typeof bookId !== undefined) {
+      url = `${this.apiUrl}/${bookId}/random`
+    }
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +46,7 @@ export default class HadithService {
   async searchHadith(query: string, bookId?: string): Promise<Hadith[]> {
     var url = `${this.apiUrl}/query?q=${query}`;
     if (typeof bookId !== undefined) {
-      url = `${this.apiUrl}/bookId/query?q=${query}`;
+      url = `${this.apiUrl}/query/${bookId}?q=${query}`;
     }
 
     const response = await fetch(url, {

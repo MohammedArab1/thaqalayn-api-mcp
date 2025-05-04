@@ -29,9 +29,14 @@ export default class HadithController {
     }
   }
 
-  async randomHadithHandler(): Promise<ControllerResponse> {
+  async randomHadithHandler(bookId?: string): Promise<ControllerResponse> {
     try {
-      const hadith = await this.service.getRandomHadith();
+      var hadith: Hadith
+      if (typeof bookId !== undefined) {
+        hadith = await this.service.getRandomHadith(bookId)
+      } else {
+        hadith = await this.service.getRandomHadith();
+      }
       return {
         success: true,
         data: JSON.stringify(hadith),
