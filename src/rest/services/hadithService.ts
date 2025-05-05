@@ -30,9 +30,9 @@ export default class HadithService {
 
   // Hadith operations
   async getRandomHadith(bookId?: string): Promise<Hadith> {
-    var url = `${this.apiUrl}/random`
+    var url = `${this.apiUrl}/random`;
     if (typeof bookId !== undefined) {
-      url = `${this.apiUrl}/${bookId}/random`
+      url = `${this.apiUrl}/${bookId}/random`;
     }
     const response = await fetch(url, {
       method: "GET",
@@ -112,6 +112,22 @@ export default class HadithService {
       );
     }
 
+    return await response.json();
+  }
+
+  async graphQLRequest(gqlQuery: string): Promise<any> {
+    const response = await fetch(`${this.apiUrl}/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: gqlQuery,
+      }),
+    });
+    if (!response.ok) {
+      throw new Error(`Error fetching graphql data: ${response.statusText}`);
+    }
     return await response.json();
   }
 }

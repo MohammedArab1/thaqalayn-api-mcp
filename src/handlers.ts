@@ -149,4 +149,35 @@ export const registerHandlers = (server: McpServer) => {
       };
     },
   );
+
+  server.tool(
+    "make gql request",
+    `
+    Makes a GQL request. Information must first be fetched from the get-graphql-introspection tool
+    `,
+    {
+      query: z.string().describe("graphql query"),
+    },
+    async ({ query }) => {
+      const gql = await hadithController.gqlHandler(query);
+      if (!gql.data) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: "Failed to retrieve introspection",
+            },
+          ],
+        };
+      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: gql.data,
+          },
+        ],
+      };
+    },
+  );
 };

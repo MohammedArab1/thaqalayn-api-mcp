@@ -89,4 +89,19 @@ export default class HadithService {
         }
         return await response.json();
     }
+    async graphQLRequest(gqlQuery) {
+        const response = await fetch(`${this.apiUrl}/graphql`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                query: gqlQuery,
+            }),
+        });
+        if (!response.ok) {
+            throw new Error(`Error fetching graphql data: ${response.statusText}`);
+        }
+        return await response.json();
+    }
 }

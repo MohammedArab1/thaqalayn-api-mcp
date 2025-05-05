@@ -31,9 +31,9 @@ export default class HadithController {
 
   async randomHadithHandler(bookId?: string): Promise<ControllerResponse> {
     try {
-      var hadith: Hadith
+      var hadith: Hadith;
       if (typeof bookId !== undefined) {
-        hadith = await this.service.getRandomHadith(bookId)
+        hadith = await this.service.getRandomHadith(bookId);
       } else {
         hadith = await this.service.getRandomHadith();
       }
@@ -101,6 +101,22 @@ export default class HadithController {
       };
     } catch (error) {
       console.error("Failed to fetch introspection:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
+  }
+
+  async gqlHandler(gqlQuery: string): Promise<ControllerResponse> {
+    try {
+      const gql = await this.service.graphQLRequest(gqlQuery);
+      return {
+        success: true,
+        data: JSON.stringify(gql),
+      };
+    } catch (error) {
+      console.error("Failed to fetch gql response:", error);
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",

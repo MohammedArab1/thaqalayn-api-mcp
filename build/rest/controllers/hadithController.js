@@ -97,4 +97,20 @@ export default class HadithController {
             };
         }
     }
+    async gqlHandler(gqlQuery) {
+        try {
+            const gql = await this.service.graphQLRequest(gqlQuery);
+            return {
+                success: true,
+                data: JSON.stringify(gql),
+            };
+        }
+        catch (error) {
+            console.error("Failed to fetch gql response:", error);
+            return {
+                success: false,
+                error: error instanceof Error ? error.message : "Unknown error",
+            };
+        }
+    }
 }
