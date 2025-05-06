@@ -1,9 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import HadithService from "./rest/services/hadithService.js";
-import HadithController from "./rest/controllers/hadithController.js";
-import { MCPReturn } from "./types/types.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
 import { registerHandlers } from "./handlers.js";
 
 async function main() {

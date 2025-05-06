@@ -97,7 +97,7 @@ export default class HadithService {
         }
       `;
 
-    const response = await fetch(`${this.apiUrl}/graphql`, {
+    const response = await fetch(`https://www.thaqalayn-api.net/graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

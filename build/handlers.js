@@ -123,10 +123,12 @@ export const registerHandlers = (server) => {
             ],
         };
     });
-    server.tool("make gql request", `
+    server.tool("make-gql-request", `
     Makes a GQL request. Information must first be fetched from the get-graphql-introspection tool
     `, {
-        query: z.string().describe("graphql query"),
+        query: z.string().describe(`
+        graphql query. Query must be json object with "query" field and the gql query as a string value
+      `),
     }, async ({ query }) => {
         const gql = await hadithController.gqlHandler(query);
         if (!gql.data) {
