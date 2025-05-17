@@ -16,7 +16,6 @@ export const registerHandlers = (server: McpServer) => {
     async () => {
       const allBooks = await hadithController.allBooksHandler();
       if (!allBooks.data) {
-        // return returnContent("text", "Failed to retrieve book information");
         return {
           content: [
             {
@@ -26,7 +25,6 @@ export const registerHandlers = (server: McpServer) => {
           ],
         };
       }
-      // return returnContent("text", allBooks.data);
       return {
         content: [
           {
@@ -41,7 +39,6 @@ export const registerHandlers = (server: McpServer) => {
   server.tool("get-random-hadith", "Get a random hadith", async () => {
     const hadith = await hadithController.randomHadithHandler();
     if (!hadith.data) {
-      // return returnContent("text", "Failed to retrieve book information");
       return {
         content: [
           {
@@ -51,7 +48,6 @@ export const registerHandlers = (server: McpServer) => {
         ],
       };
     }
-    // return returnContent("text", allBooks.data);
     return {
       content: [
         {
