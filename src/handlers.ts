@@ -12,7 +12,8 @@ export const registerHandlers = (server: McpServer) => {
   server.tool(
     "get-all-books",
     `Get all information about each book.
-    Use this endpoint first to find book IDs if requesting an endpoint that requires a book id.`,
+    Use this endpoint first to find book IDs if requesting an endpoint that requires a book id.
+    endpoints require a bookId when requesting data from a specific book.`,
     async () => {
       const allBooks = await hadithController.allBooksHandler();
       if (!allBooks.data) {
@@ -60,7 +61,8 @@ export const registerHandlers = (server: McpServer) => {
 
   server.tool(
     "search-all-books",
-    "Search hadiths based on a query",
+    `Search hadiths based on a query. For best results, come up with a list of related terms and search based on those terms, 
+    since this does not do fuzzy search`,
     {
       query: z.string().describe("search query"),
     },
@@ -122,6 +124,7 @@ export const registerHandlers = (server: McpServer) => {
     `
     Fetches the graphql introspection, used to know how to make requests to the graphql api
     to fetch only the necessary fields.
+    Before making any GQL request, a requst needs to be made to this tool to know how the GQL api works.
     `,
     async () => {
       const introspection = await hadithController.introspectionHandler();
@@ -149,7 +152,8 @@ export const registerHandlers = (server: McpServer) => {
   server.tool(
     "make-gql-request",
     `
-    Makes a GQL request. Information must first be fetched from the get-graphql-introspection tool
+    Makes a GQL request. 
+    Introspection data must first be fetched from the get-graphql-introspection tool to know which fields can be queried
     `,
     {
       query: z.string().describe(`
