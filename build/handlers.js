@@ -6,10 +6,10 @@ export const registerHandlers = (server) => {
     const hadithService = new HadithService(API_BASE);
     const hadithController = new HadithController(hadithService);
     server.tool("get-all-books", `Get all information about each book.
-    Use this endpoint first to find book IDs if requesting an endpoint that requires a book id.`, async () => {
+    Use this endpoint first to find book IDs if requesting an endpoint that requires a book id.
+    endpoints require a bookId when requesting data from a specific book.`, async () => {
         const allBooks = await hadithController.allBooksHandler();
         if (!allBooks.data) {
-            // return returnContent("text", "Failed to retrieve book information");
             return {
                 content: [
                     {
@@ -19,7 +19,6 @@ export const registerHandlers = (server) => {
                 ],
             };
         }
-        // return returnContent("text", allBooks.data);
         return {
             content: [
                 {
@@ -32,7 +31,6 @@ export const registerHandlers = (server) => {
     server.tool("get-random-hadith", "Get a random hadith", async () => {
         const hadith = await hadithController.randomHadithHandler();
         if (!hadith.data) {
-            // return returnContent("text", "Failed to retrieve book information");
             return {
                 content: [
                     {
@@ -42,7 +40,6 @@ export const registerHandlers = (server) => {
                 ],
             };
         }
-        // return returnContent("text", allBooks.data);
         return {
             content: [
                 {
@@ -52,7 +49,8 @@ export const registerHandlers = (server) => {
             ],
         };
     });
-    server.tool("search-all-books", "Search hadiths based on a query", {
+    server.tool("search-all-books", `Search hadiths based on a query. For best results, come up with a list of related terms and search based on those terms, 
+    since this does not do fuzzy search`, {
         query: z.string().describe("search query"),
     }, async ({ query }) => {
         const hadiths = await hadithController.hadithQueryHandler(query);
@@ -102,6 +100,7 @@ export const registerHandlers = (server) => {
     server.tool("get-graphql-introspection", `
     Fetches the graphql introspection, used to know how to make requests to the graphql api
     to fetch only the necessary fields.
+    Before making any GQL request, a requst needs to be made to this tool to know how the GQL api works.
     `, async () => {
         const introspection = await hadithController.introspectionHandler();
         if (!introspection.data) {
@@ -124,7 +123,8 @@ export const registerHandlers = (server) => {
         };
     });
     server.tool("make-gql-request", `
-    Makes a GQL request. Information must first be fetched from the get-graphql-introspection tool
+    Makes a GQL request. 
+    Introspection data must first be fetched from the get-graphql-introspection tool to know which fields can be queried
     `, {
         query: z.string().describe(`
         graphql query. Query must be json object with "query" field and the gql query as a string value

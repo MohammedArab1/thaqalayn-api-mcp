@@ -8,6 +8,7 @@ export declare type Book = {
   bookCover?: String;
   englishName?: String;
   translator?: String;
+  Volume: Number;
 };
 
 export declare type ControllerResponse = {
@@ -19,6 +20,20 @@ export declare type ControllerResponse = {
 export declare type MCPReturn = {
   content?: [type?: string, text?: string];
 };
+
+declare type Author = {
+  name_en?: String;
+  name_ar?: String;
+  link?: String;
+  death_date?: String;
+}
+
+declare type Grading = {
+  grade_en: String;
+  grade_ar: String;
+  reference_en: String;
+  author: Author;
+}
 
 export declare type Hadith = {
   id: Number;
@@ -35,6 +50,12 @@ export declare type Hadith = {
   BehdudiGrading: String;
   MohseniGrading: String;
   URL: String;
+  volume: String;
+  frenchText: String;
+  chapterInCategoryId: String;
+  thaqalaynSanad: String;
+  thaqalaynMatn: String;
+  GradingsFull?: Grading[];
 };
 
 export declare type Ingredient = {
